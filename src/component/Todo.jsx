@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, List, ListItem, OutlinedInput, ListItemText, InputAdornment, IconButton, TextField } from '@mui/material';
+import { Box, List, ListItem, OutlinedInput, ListItemText, InputAdornment, IconButton} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,27 +8,26 @@ import todo from './todo.png'
 const Todo = () => {
     const [inputValue, setInputValue] = useState("");
     const [data, setData] = useState([])
+    const [error, setError] = useState("")
 
     const onChangeHandler = (event) => {
-        if(inputValue==null)
-        {
-            alert("Enter value")
-        }
-        else
-        {
-
-            setInputValue(event.target.value)
-        }
+        setInputValue(event.target.value)
     };
 
     const submitData = (data) => {
-        setData((oldItems) => {
-            return (
-                [...oldItems, inputValue]
-            )
-        })
-        data.preventDefault()
-        setInputValue("")
+        if (inputValue) {
+            setError("")
+            setData((oldItems) => {
+                return (
+                    [...oldItems, inputValue]
+                )
+            })
+            data.preventDefault()
+            setInputValue("")
+        }
+        else {
+            setError("Please Enter your Task")
+        }
     }
 
     return (
@@ -66,7 +65,11 @@ const Todo = () => {
                             </InputAdornment>
                         }
                     />
-                    
+                    <h1 style={{
+                        color:"red"
+                    }}>
+                        {error}
+                    </h1>
                 </form>
             </Box>
             <Box sx={{
@@ -132,5 +135,4 @@ const Todo = () => {
         </div>
     )
 }
-
 export default Todo
