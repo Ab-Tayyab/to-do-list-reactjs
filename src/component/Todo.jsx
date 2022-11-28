@@ -1,33 +1,54 @@
 import React, { useState } from 'react'
-import { Box, List, ListItem, OutlinedInput, ListItemText, InputAdornment, IconButton} from '@mui/material';
+import { Box, List, ListItem, OutlinedInput, ListItemText, InputAdornment, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import todo from './todo.png'
 
 const Todo = () => {
-    const [inputValue, setInputValue] = useState("");
-    const [data, setData] = useState([])
+    const [inputData, setInputData] = useState("")
+    const [allData, setAllData] = useState([])
+    const [toggleButton, setToggleButton] = useState(true)
     const [error, setError] = useState("")
+    const [isEdit, setIsEdit] = useState(null)
 
-    const onChangeHandler = (event) => {
-        setInputValue(event.target.value)
-    };
-
-    const submitData = (data) => {
-        if (inputValue) {
-            setError("")
-            setData((oldItems) => {
-                return (
-                    [...oldItems, inputValue]
-                )
-            })
-            data.preventDefault()
-            setInputValue("")
+    const submitData = (e) => {
+        e.preventDefault()
+        if (!inputData) {
+            setError("Please enter your task")
+        }
+        else if (!toggleButton && inputData) {
+            setAllData(
+                allData.map((elem) => {
+                    if (elem.id === isEdit) {
+                        return { ...elem, name: inputData }
+                    }
+                    return elem
+                })
+            )
+            setToggleButton(true)
+            setInputData("")
+            setIsEdit(null)
         }
         else {
-            setError("Please Enter your Task")
+            const newData = {
+                id: new Date().getTime().toString(),
+                name: inputData,
+            }
+            setAllData([...allData, newData])
+            setInputData("")
+            setError("")
         }
+    }
+
+    const edit = (item, i) => {
+        const updatedItem = allData.find((ele) => {
+            return ele.id == i;
+        })
+        console.log(updatedItem)
+        setToggleButton(false)
+        setInputData(item)
+        setIsEdit(i)
     }
 
     return (
@@ -48,25 +69,36 @@ const Todo = () => {
                         placeholder='Enter Your Task'
                         type="text"
                         name="name"
-                        onChange={onChangeHandler}
-                        value={inputValue}
+                        onChange={(e) => { setInputData(e.target.value) }}
+                        value={inputData}
+
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
                                     edge="end">
-                                    <AddIcon
-                                        sx={{
-                                            "&:hover": {
-                                                color: 'red'
-                                            }
-                                        }}
-                                        onClick={submitData} />
+                                    {
+                                        toggleButton ?
+                                            <AddIcon
+                                                sx={{
+                                                    "&:hover": {
+                                                        color: 'red'
+                                                    }
+                                                }}
+                                                onClick={submitData} /> : <EditIcon
+                                                sx={{
+                                                    "&:hover": {
+                                                        color: 'red'
+                                                    }
+                                                }}
+                                                onClick={submitData} />
+                                    }
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
+
                     <h1 style={{
-                        color:"red"
+                        color: "red"
                     }}>
                         {error}
                     </h1>
@@ -76,7 +108,7 @@ const Todo = () => {
                 width: "350px"
             }}>
                 {
-                    data.map((item, i) => {
+                    allData.map((item, i) => {
                         return (
                             <List sx={{
                                 background: "blue",
@@ -103,8 +135,7 @@ const Todo = () => {
                                                 }}
                                                 onClick={
                                                     () => {
-                                                        setInputValue(item)
-                                                        data.splice(i, 1)
+                                                        edit(item.name, item.id)
                                                     }
                                                 } />
                                             <DeleteIcon
@@ -116,15 +147,15 @@ const Todo = () => {
                                                 }}
                                                 onClick={
                                                     () => {
-                                                        data.splice(i, 1)
-                                                        setData([...data])
+                                                        allData.splice(i, 1)
+                                                        setAllData([...allData])
                                                     }
                                                 } />
                                         </IconButton>
                                     }>
                                     <ListItemText
                                         key={i}
-                                        primary={item}
+                                        primary={item.name}
                                     />
                                 </ListItem>
                             </List>
