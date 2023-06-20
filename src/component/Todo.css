@@ -1,0 +1,97 @@
+.todo-parent {
+    width: 500px;
+    margin: auto;
+    padding-top: 50px
+}
+
+.first-child,
+.img,
+.input {
+    width: 500px;
+}
+
+.add-icone,
+.edit-icone {
+    color: white
+}
+
+.add-icone:hover,
+.edit-icone:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.input::placeholder{
+    color: white;
+}
+
+.error {
+    color: red;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.list {
+    color: white;
+    margin-bottom: 5px;
+    width: 500px;
+    border: none;
+    border: 1px solid white;
+}
+
+.list-box {
+    width: 65px;
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width:834px) and (min-width:600px) {
+    .todo-parent {
+        width: 500px;
+    }
+
+    .first-child,
+    .img,
+    .input {
+        width: 500px;
+    }
+
+    .list {
+        width: 500px;
+    }
+
+}
+
+@media (max-width:599px) {
+    .todo-parent {
+        width: 350px;
+    }
+
+    .first-child,
+    .img,
+    .input {
+        width: 350px;
+    }
+
+    .list {
+        width: 350px;
+    }
+
+}
+
+@media (max-width:370px) {
+    .todo-parent {
+        width: 300px;
+    }
+
+    .first-child,
+    .img,
+    .input {
+        width: 300px;
+    }
+
+    .list {
+        width: 300px;
+    }
+
+}
